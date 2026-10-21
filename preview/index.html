@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dhobi Tracker — Live Mobile Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Device Frame Container -->
+  <div class="simulator-wrapper">
+    <!-- Top toolbar outside phone -->
+    <header class="preview-header">
+      <div class="logo-area">
+        <span class="logo-icon">🧺</span>
+        <div>
+          <h1>Dhobi Tracker</h1>
+          <p class="subtitle">Interactive Android App Simulator • Jetpack Compose UI</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="badge offline-badge">● 100% Offline</span>
+        <button id="btn-seed-sample" class="secondary-btn" title="Load sample laundry records">Load Sample Data</button>
+        <button id="btn-reset-data" class="secondary-btn danger-text" title="Clear all local data">Reset Data</button>
+      </div>
+    </header>
+
+    <!-- Mobile Device Mockup -->
+    <div class="phone-frame">
+      <!-- Phone Speaker & Camera Notch -->
+      <div class="phone-notch">
+        <div class="speaker"></div>
+        <div class="camera-lens"></div>
+      </div>
+
+      <!-- Android System Status Bar -->
+      <div class="android-status-bar">
+        <span class="status-time" id="status-clock">09:41</span>
+        <div class="status-icons">
+          <span class="icon-signal">📶</span>
+          <span class="icon-wifi">🛜</span>
+          <span class="icon-battery">🔋 100%</span>
+        </div>
+      </div>
+
+      <!-- Main App Screen Viewport -->
+      <main class="app-viewport">
+        <!-- SCREEN 1: HOME DASHBOARD -->
+        <section id="screen-home" class="screen-view active">
+          <div class="screen-content">
+            <div class="home-top-bar">
+              <div>
+                <h2 class="app-brand-title">Dhobi Tracker</h2>
+                <p class="current-date-text" id="home-today-date">Today</p>
+              </div>
+              <div class="profile-avatar">🧺</div>
+            </div>
+
+            <!-- Primary Add Laundry CTA -->
+            <button id="cta-add-laundry" class="btn-primary-add">
+              <span class="plus-icon">+</span> Add Laundry Bag
+            </button>
+
+            <!-- Real-Time Statistics Grid -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-header">
+                  <div class="stat-icon-box blue-bg">🧺</div>
+                  <span class="stat-title">At Dhobi</span>
+                </div>
+                <div class="stat-value" id="stat-bags-at-dhobi">0</div>
+                <div class="stat-sub">Bags active</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <div class="stat-icon-box amber-bg">⏳</div>
+                  <span class="stat-title">Awaiting</span>
+                </div>
+                <div class="stat-value" id="stat-items-awaiting">0</div>
+                <div class="stat-sub">Clothes pending</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <div class="stat-icon-box purple-bg">📑</div>
+                  <span class="stat-title">Partially Back</span>
+                </div>
+                <div class="stat-value" id="stat-partially-returned">0</div>
+                <div class="stat-sub">Bags with missing</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-header">
+                  <div class="stat-icon-box green-bg">✓</div>
+                  <span class="stat-title">Collected</span>
+                </div>
+                <div class="stat-value" id="stat-collected-bags">0</div>
+                <div class="stat-sub">All-time finished</div>
+              </div>
+            </div>
+
+            <!-- Recent Bags Section -->
+            <div class="section-header-row">
+              <h3>Recent Bags</h3>
+              <button id="btn-see-all-history" class="text-link-btn">See All</button>
+            </div>
+
+            <div id="home-records-list" class="records-container">
+              <!-- Dynamically populated or empty state -->
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREEN 2: ADD / EDIT LAUNDRY -->
+        <section id="screen-add" class="screen-view">
+          <div class="app-top-nav">
+            <button class="nav-back-btn" id="btn-back-add">←</button>
+            <div class="nav-title-group">
+              <h2 id="add-screen-title">New Laundry Bag</h2>
+              <span id="add-record-id-badge" class="nav-subtitle">DT-261020-001</span>
+            </div>
+            <div style="width: 32px;"></div>
+          </div>
+
+          <div class="screen-content scrollable">
+            <!-- Chit Slip Photo Card -->
+            <div class="ui-card chit-upload-card">
+              <div class="card-title-row">
+                <h4>Paper Chit / Slip Photo</h4>
+                <button id="btn-remove-chit" class="icon-danger-btn hidden">✕</button>
+              </div>
+
+              <div id="chit-preview-container" class="chit-preview-box">
+                <div class="empty-upload-placeholder" id="chit-empty-placeholder">
+                  <span class="placeholder-icon">📸</span>
+                  <p>Photograph the physical chit or slip given by your dhobi as proof.</p>
+                  <div class="upload-btn-row">
+                    <button id="btn-mock-camera" class="outlined-btn">📷 Camera</button>
+                    <button id="btn-sample-chit" class="outlined-btn">🖼️ Sample Chit</button>
+                    <input type="file" id="chit-file-input" accept="image/*" class="hidden">
+                  </div>
+                </div>
+                <img id="chit-preview-img" class="chit-img hidden" alt="Chit Slip">
+              </div>
+
+              <!-- OCR Scanning Button -->
+              <div id="ocr-action-bar" class="ocr-action-bar hidden">
+                <button id="btn-scan-ocr" class="btn-scan-ocr">
+                  <span class="scanner-icon">🔍</span> Scan Chit with OCR
+                </button>
+              </div>
+            </div>
+
+            <!-- Basic Record Info Card -->
+            <div class="ui-card">
+              <h4>Bag Details</h4>
+              <div class="form-group">
+                <label for="input-date-given">Date Handed Over</label>
+                <input type="date" id="input-date-given" class="form-input">
+              </div>
+
+              <div class="form-group">
+                <label for="input-slip-no">Handwritten Slip Number (Optional)</label>
+                <input type="text" id="input-slip-no" class="form-input" placeholder="e.g. 1042 or B-28">
+              </div>
+
+              <div class="form-group">
+                <label for="input-dhobi-name">Dhobi / Shop Name (Optional)</label>
+                <input type="text" id="input-dhobi-name" class="form-input" placeholder="e.g. Raju Dhobi, Super Drycleaners">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="input-amount">Amount (₹)</label>
+                  <input type="number" id="input-amount" class="form-input" placeholder="0.00" step="1">
+                </div>
+                <div class="form-group flex-1">
+                  <label for="input-return-date">Expected Return</label>
+                  <input type="date" id="input-return-date" class="form-input">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input-notes">Notes (Optional)</label>
+                <textarea id="input-notes" class="form-input" rows="2" placeholder="e.g. Starch white shirts, gentle wash on kurta"></textarea>
+              </div>
+            </div>
+
+            <!-- Garments Inventory Card -->
+            <div class="ui-card">
+              <div class="card-title-row">
+                <div>
+                  <h4>Clothing Items</h4>
+                  <p class="card-subtext">Tap + / - or click the number to type directly</p>
+                </div>
+                <div class="total-pill" id="live-total-pill">Total: 0</div>
+              </div>
+
+              <div id="clothing-rows-list" class="clothing-rows-container">
+                <!-- Populated via JS -->
+              </div>
+
+              <button id="btn-add-custom-cat" class="add-custom-btn">+ Add Custom Clothing Item</button>
+            </div>
+          </div>
+
+          <!-- Bottom Save / Cancel Bar -->
+          <div class="bottom-action-bar">
+            <button id="btn-cancel-add" class="secondary-action-btn">Cancel</button>
+            <button id="btn-save-record" class="primary-action-btn">Save Bag (0 items)</button>
+          </div>
+        </section>
+
+        <!-- SCREEN 3: OCR VERIFICATION & CONFIRMATION -->
+        <section id="screen-ocr" class="screen-view">
+          <div class="app-top-nav">
+            <button class="nav-back-btn" id="btn-cancel-ocr">←</button>
+            <div class="nav-title-group">
+              <h2>Verify Chit Reading</h2>
+              <span class="nav-subtitle">Review extracted values</span>
+            </div>
+            <div style="width: 32px;"></div>
+          </div>
+
+          <div class="screen-content scrollable">
+            <!-- Scanned Image Display with OCR Overlay -->
+            <div class="ui-card">
+              <h4>Recognized Slip Photo</h4>
+              <div class="ocr-image-box">
+                <img id="ocr-source-image" src="" alt="OCR Source" class="ocr-display-img">
+                <div class="ocr-scan-line"></div>
+              </div>
+              <div class="ocr-disclaimer">
+                <span>ℹ️</span> On-device OCR extracts printed digits and category names. Verify handwritten numbers below.
+              </div>
+            </div>
+
+            <!-- Discrepancy Alert Banner if detected total differs from sum -->
+            <div id="ocr-mismatch-banner" class="mismatch-banner hidden">
+              <span>⚠️</span>
+              <div>
+                <strong>Total Mismatch Warning:</strong>
+                <p id="ocr-mismatch-text">Item sum (0) differs from chit total (0). Please verify numbers below.</p>
+              </div>
+            </div>
+
+            <!-- Extracted Metadata Card -->
+            <div class="ui-card">
+              <h4>Extracted Information</h4>
+              <div class="form-group">
+                <label for="ocr-slip-number">Slip Number</label>
+                <input type="text" id="ocr-slip-number" class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="ocr-detected-date">Detected Date</label>
+                <input type="text" id="ocr-detected-date" class="form-input" readonly>
+              </div>
+            </div>
+
+            <!-- Extracted Items List -->
+            <div class="ui-card">
+              <div class="card-title-row">
+                <h4>Detected Items</h4>
+                <div class="total-pill" id="ocr-current-sum">Sum: 0</div>
+              </div>
+              <div id="ocr-items-list" class="clothing-rows-container">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-action-bar">
+            <button id="btn-discard-ocr" class="secondary-action-btn">Discard OCR</button>
+            <button id="btn-apply-ocr" class="primary-action-btn">Apply to Record</button>
+          </div>
+        </section>
+
+        <!-- SCREEN 4: RECORD DETAILS -->
+        <section id="screen-details" class="screen-view">
+          <div class="app-top-nav">
+            <button class="nav-back-btn" id="btn-back-details">←</button>
+            <div class="nav-title-group">
+              <h2 id="details-record-id">DT-261020-001</h2>
+              <span id="details-date-subtitle" class="nav-subtitle">20 Oct 2026</span>
+            </div>
+            <div class="nav-actions">
+              <button id="btn-edit-details" class="icon-nav-btn" title="Edit Bag">✏️</button>
+              <button id="btn-delete-details" class="icon-nav-btn danger-text" title="Delete Bag">🗑️</button>
+            </div>
+          </div>
+
+          <div class="screen-content scrollable">
+            <!-- Status Card -->
+            <div class="ui-card status-summary-card">
+              <div class="card-title-row">
+                <span class="meta-label">Return Status</span>
+                <span id="details-status-badge" class="status-pill status-pending">Pending</span>
+              </div>
+              <div class="counts-summary-row">
+                <div class="count-box">
+                  <span class="count-num" id="details-count-given">0</span>
+                  <span class="count-lbl">Given</span>
+                </div>
+                <div class="count-box">
+                  <span class="count-num green-text" id="details-count-returned">0</span>
+                  <span class="count-lbl">Returned</span>
+                </div>
+                <div class="count-box">
+                  <span class="count-num danger-text" id="details-count-pending">0</span>
+                  <span class="count-lbl">Outstanding</span>
+                </div>
+              </div>
+
+              <!-- Discrepancy alert if collected despite missing -->
+              <div id="details-discrepancy-notice" class="discrepancy-notice hidden">
+                ⚠️ Marked collected with missing items. Preserved in history.
+              </div>
+            </div>
+
+            <!-- Show Chit to Dhobi Card -->
+            <div class="ui-card chit-presentation-card" id="details-chit-card">
+              <div class="card-title-row">
+                <h4>Original Dhobi Chit</h4>
+                <button id="btn-open-fullscreen-chit" class="text-link-btn">🔍 Show to Dhobi</button>
+              </div>
+              <div class="chit-thumbnail-container" id="details-chit-preview-box">
+                <img id="details-chit-img" src="" alt="Dhobi Chit" class="chit-thumb-img">
+                <span class="zoom-badge">Tap to Zoom</span>
+              </div>
+            </div>
+
+            <!-- Bag Metadata Card -->
+            <div class="ui-card">
+              <h4>Bag Information</h4>
+              <div class="info-row">
+                <span class="info-label">Slip Number:</span>
+                <span class="info-val" id="details-val-slip">-</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Dhobi / Shop:</span>
+                <span class="info-val" id="details-val-dhobi">-</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Amount:</span>
+                <span class="info-val" id="details-val-amount">-</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Expected Return:</span>
+                <span class="info-val" id="details-val-expected">-</span>
+              </div>
+              <div class="info-row" id="details-notes-row">
+                <span class="info-label">Notes:</span>
+                <span class="info-val" id="details-val-notes">-</span>
+              </div>
+            </div>
+
+            <!-- Itemized Inventory Table -->
+            <div class="ui-card">
+              <div class="card-title-row">
+                <h4>Itemized Inventory</h4>
+                <button id="btn-quick-mark-all" class="text-link-btn">Mark All Returned</button>
+              </div>
+              <div class="inventory-table">
+                <div class="table-header">
+                  <span class="col-item">Item</span>
+                  <span class="col-qty">Given</span>
+                  <span class="col-qty">Back</span>
+                  <span class="col-qty">Pending</span>
+                </div>
+                <div id="details-items-table-body" class="table-body">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-action-bar">
+            <button id="btn-whatsapp-share" class="whatsapp-btn">
+              <span class="wa-icon">💬</span> Share on WhatsApp
+            </button>
+            <button id="btn-open-collection" class="primary-action-btn">Track Return</button>
+          </div>
+        </section>
+
+        <!-- SCREEN 5: SEARCHABLE HISTORY -->
+        <section id="screen-history" class="screen-view">
+          <div class="screen-content">
+            <div class="home-top-bar">
+              <div>
+                <h2>Laundry History</h2>
+                <p id="history-total-count" class="subtitle">0 records logged</p>
+              </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="history-search-input" class="search-input" placeholder="Search by slip #, record ID, or dhobi...">
+              <button id="btn-clear-search" class="clear-search-btn hidden">✕</button>
+            </div>
+
+            <!-- Status Filter Chips -->
+            <div class="chips-scroll-row">
+              <button class="filter-chip active" data-status="ALL">All</button>
+              <button class="filter-chip" data-status="PENDING">Pending</button>
+              <button class="filter-chip" data-status="PARTIALLY_RETURNED">Partially Back</button>
+              <button class="filter-chip" data-status="COLLECTED">Collected</button>
+            </div>
+
+            <!-- Date Filter Chips -->
+            <div class="chips-scroll-row secondary-chips">
+              <button class="date-chip active" data-date="ALL">All Time</button>
+              <button class="date-chip" data-date="7DAYS">Last 7 Days</button>
+              <button class="date-chip" data-date="MONTH">This Month</button>
+            </div>
+
+            <!-- Records List -->
+            <div id="history-records-list" class="records-container scrollable-history">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREEN 6: SETTINGS & BACKUP -->
+        <section id="screen-settings" class="screen-view">
+          <div class="screen-content scrollable">
+            <div class="home-top-bar">
+              <div>
+                <h2>Settings & Data</h2>
+                <p class="subtitle">Preferences, category manager, and local backups</p>
+              </div>
+            </div>
+
+            <!-- Default Dhobi Name -->
+            <div class="ui-card">
+              <h4>Default Dhobi Name</h4>
+              <p class="card-subtext">Pre-fills the shop name when creating a new laundry bag.</p>
+              <div class="form-group" style="margin-top: 10px;">
+                <input type="text" id="setting-default-dhobi" class="form-input" placeholder="e.g. Raju Dhobi">
+              </div>
+            </div>
+
+            <!-- Clothing Categories Manager -->
+            <div class="ui-card">
+              <div class="card-title-row">
+                <h4>Clothing Categories</h4>
+                <button id="btn-setting-add-cat" class="text-link-btn">+ Add</button>
+              </div>
+              <p class="card-subtext">Toggle clothing items that appear in the entry form.</p>
+              <div id="settings-categories-list" class="categories-toggle-list">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+
+            <!-- Safe Local Backup & Restore -->
+            <div class="ui-card">
+              <h4>Backup & Restore</h4>
+              <p class="card-subtext">
+                Export your database records and full chit photos into a portable JSON/ZIP archive.
+              </p>
+              <div class="backup-btn-row">
+                <button id="btn-export-backup" class="btn-primary-add" style="margin: 0; flex: 1;">💾 Export Backup</button>
+                <button id="btn-import-backup-trigger" class="secondary-btn" style="flex: 1;">📥 Restore</button>
+                <input type="file" id="backup-file-input" accept=".json,.zip" class="hidden">
+              </div>
+            </div>
+
+            <!-- Privacy & Storage Architecture -->
+            <div class="ui-card">
+              <h4>Privacy & Offline Architecture</h4>
+              <ul class="privacy-bullet-list">
+                <li><strong>100% Offline:</strong> No internet connection is ever required.</li>
+                <li><strong>Private Storage:</strong> Zero accounts, zero analytics, zero external cloud servers.</li>
+                <li><strong>On-Device OCR:</strong> All optical text extraction executes locally on your phone.</li>
+                <li><strong>Data Ownership:</strong> You own all data and photos stored locally.</li>
+              </ul>
+              <div class="app-version-footer">
+                <span>App Version</span>
+                <strong>1.0.0 (Production)</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Navigation Bar (Home, History, Settings) -->
+      <nav class="bottom-nav-bar">
+        <button class="nav-item active" data-target="screen-home">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item" data-target="screen-history">
+          <span class="nav-icon">📜</span>
+          <span class="nav-label">History</span>
+        </button>
+        <button class="nav-item" data-target="screen-settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MODAL: COLLECTION TRACKING SHEET -->
+  <div id="modal-collection" class="modal-overlay hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3>Track Collection</h3>
+          <p class="modal-subtitle">Record returned clothes from the dhobi</p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-collection">✕</button>
+      </div>
+      <div class="modal-body scrollable">
+        <button id="btn-collection-mark-all" class="outlined-btn full-width">✓ Mark All Items As Returned</button>
+        <div id="collection-items-list" class="clothing-rows-container" style="margin-top: 14px;">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-collection" class="primary-action-btn full-width">Save Collection Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FULL-SCREEN CHIT ZOOM VIEWER -->
+  <div id="modal-fullscreen-chit" class="modal-overlay hidden fullscreen-image-viewer">
+    <button class="fs-close-btn" id="btn-close-fullscreen-chit">✕</button>
+    <div class="fs-image-container">
+      <img id="fs-chit-img" src="" alt="Full Chit">
+    </div>
+    <div class="fs-controls">
+      <span>Pinch or scroll to zoom • Drag to pan</span>
+    </div>
+  </div>
+
+  <!-- MODAL: WHATSAPP SHARE PREVIEW -->
+  <div id="modal-whatsapp" class="modal-overlay hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Share via WhatsApp</h3>
+        <button class="modal-close-btn" id="btn-close-whatsapp">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="card-subtext">Formatted message ready to send with your paper chit:</p>
+        <pre id="whatsapp-message-preview" class="whatsapp-bubble"></pre>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-copy-whatsapp" class="primary-action-btn full-width">📋 Copy & Open WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script src="app.js"></script>
+</body>
+</html>
