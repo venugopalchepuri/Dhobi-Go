@@ -1,6 +1,7 @@
 package com.dhobigo.tracker.ui.screens.auth
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,10 +38,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dhobigo.tracker.R
 
 @Composable
 fun WelcomeScreen(
@@ -63,25 +66,18 @@ fun WelcomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // App Emblem
-            Box(
-                modifier = Modifier
-                    .size(88.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(MaterialTheme.colorScheme.primary),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.LocalLaundryService,
-                    contentDescription = "DhobiGo Logo",
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-
             Spacer(modifier = Modifier.height(20.dp))
+
+            // Official DhobiGo 3D Logo Emblem
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "DhobiGo Logo",
+                modifier = Modifier
+                    .size(112.dp)
+                    .clip(RoundedCornerShape(26.dp))
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
 
             Text(
                 text = "DhobiGo",

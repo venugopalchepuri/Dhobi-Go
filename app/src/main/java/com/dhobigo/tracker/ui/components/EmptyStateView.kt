@@ -25,12 +25,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.dhobigo.tracker.R
+
 @Composable
 fun EmptyStateView(
     icon: ImageVector,
     title: String,
     description: String,
     modifier: Modifier = Modifier,
+    useAppLogo: Boolean = false,
     actionButtonText: String? = null,
     onActionClick: (() -> Unit)? = null
 ) {
@@ -40,19 +46,30 @@ fun EmptyStateView(
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(36.dp)
+        if (useAppLogo) {
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "DhobiGo",
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(RoundedCornerShape(18.dp)),
+                contentScale = ContentScale.Fit
             )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

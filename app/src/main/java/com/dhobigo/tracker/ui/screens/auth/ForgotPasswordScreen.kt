@@ -48,6 +48,17 @@ import androidx.compose.ui.unit.sp
 import com.dhobigo.tracker.ui.theme.DangerRed
 import com.dhobigo.tracker.ui.theme.StatusCollectedText
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.dhobigo.tracker.R
+import com.dhobigo.tracker.ui.theme.ForestGreen
+import com.dhobigo.tracker.ui.theme.TextPrimary
+
 @Composable
 fun ForgotPasswordScreen(
     viewModel: AuthViewModel,
@@ -83,6 +94,37 @@ fun ForgotPasswordScreen(
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.onBackground
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Brand Logo Row
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = "DhobiGo Logo",
+                modifier = Modifier
+                    .size(54.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Fit
+            )
+            Column {
+                Text(
+                    text = "DhobiGo",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = ForestGreen,
+                    letterSpacing = (-0.5).sp
+                )
+                Text(
+                    text = "Account Security Recovery",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))

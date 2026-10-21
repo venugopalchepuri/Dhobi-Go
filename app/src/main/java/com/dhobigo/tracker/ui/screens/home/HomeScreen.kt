@@ -19,6 +19,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.dhobigo.tracker.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Add
@@ -84,26 +88,39 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column {
-                        val firstName = currentUser?.fullName?.split(" ")?.firstOrNull() ?: "there"
-                        Text(
-                            text = "Hello, $firstName 👋",
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.app_logo),
+                            contentDescription = "DhobiGo Brand",
+                            modifier = Modifier
+                                .size(44.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Fit
                         )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = DateUtils.formatFullDate(System.currentTimeMillis()),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 13.sp
-                        )
+                        Column {
+                            val firstName = currentUser?.fullName?.split(" ")?.firstOrNull() ?: "there"
+                            Text(
+                                text = "Hello, $firstName 👋",
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = DateUtils.formatFullDate(System.currentTimeMillis()),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 12.sp
+                            )
+                        }
                     }
 
                     // Avatar or User Emblem
                     Box(
                         modifier = Modifier
-                            .size(46.dp)
+                            .size(42.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
@@ -111,7 +128,7 @@ fun HomeScreen(
                         Text(
                             text = currentUser?.fullName?.take(1)?.uppercase() ?: "D",
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            fontSize = 18.sp,
+                            fontSize = 17.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -259,6 +276,7 @@ fun HomeScreen(
             item {
                 EmptyStateView(
                     icon = Icons.AutoMirrored.Filled.ReceiptLong,
+                    useAppLogo = true,
                     title = "No Laundry Bags Yet",
                     description = "When you give clothes to your dhobi, tap 'Record New Laundry Bag' to photograph your paper chit and save quantities.",
                     actionButtonText = "Record First Bag",
